@@ -104,7 +104,7 @@ def _feature_tokenize(
 def _bert_tokenize(string, layer=0, truncate=None, bert_tokenizer=None):
     tokens = bert_tokenizer.tokenize(string)
     if '[SEP]' in tokens:
-        src_A = ' '.join(tokens).split(' [SEP] ')[0]
+        src_A = '[CLS] ' +' '.join(tokens).split(' [SEP] ')[0]+' [SEP] ' #re-appending sep for new bert version
         src_B = ' '.join(tokens).split(' [SEP] ')[1]
         src_A_len = len(src_A.split())
         src_B_len = len(src_B.split())
@@ -254,7 +254,8 @@ def text_fields(**kwargs):
 
         segments_ids = Field(
             use_vocab=False, tokenize=tokenize,
-            dtype=torch.long, pad_token=0, unk_token=None)
+            #dtype=torch.long, 
+            pad_token=0, unk_token=None)
         fields_.append(('segments_ids', segments_ids))
     else:
         for i in range(n_feats + 1):
